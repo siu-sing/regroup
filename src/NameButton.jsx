@@ -5,9 +5,7 @@ export default function NameButton(props) {
 
     const dragStart = (e) => {
         const target = e.target;
-
         e.dataTransfer.setData('card_id', target.id)
-
         setTimeout(() => {
             // target.style.display="none";
         }, 0);
@@ -21,7 +19,7 @@ export default function NameButton(props) {
         <Row>
             <Col className="">
                 <Card
-                    className="p-1 mt-1"
+                    className="p-1 mt-1 text-center"
                     // variant="success"
                     draggable="true"
                     onDragStart={dragStart}
