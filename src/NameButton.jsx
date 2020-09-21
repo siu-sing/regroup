@@ -21,12 +21,14 @@ export default function NameButton(props) {
         <Row>
             <Col className="">
                 <Card
-                    // className="border border-success mt-1"
-                    variant="success"
+                    className="p-1 mt-1"
+                    // variant="success"
                     draggable="true"
                     onDragStart={dragStart}
                     onDragOver={dragOver}
                     id={props.id}
+                    bg="success"
+                    text="white"
                 >
                     {props.name}
                 </Card>

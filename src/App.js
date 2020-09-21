@@ -69,13 +69,25 @@ function App() {
                         </Col>
                     </Row>
                     <Row>
+                   
                         <Col
                             className="border border-danger p-3"
                             onDrop={dropHome}
                             onDragOver={dragOver}
                         >
+                             <h5>Include</h5>
+                            
                             {nameDisplay}
                         </Col>
+                        <Col
+                            className="border border-danger p-3"
+                            onDrop={dropHome}
+                            onDragOver={dragOver}
+                        >
+                            <h5>Exclude</h5>
+                            {/* {nameDisplay} */}
+                        </Col>
+
                     </Row>
                 </Col>
                 <Col md={8} className="border border-warning">
