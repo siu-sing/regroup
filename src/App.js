@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Col, Container, Row } from 'react-bootstrap';
@@ -11,8 +10,11 @@ function App() {
     // console.log(nameList)
     let numStudents = nameList.length;
     let nameDisplay = (
-        nameList.map(n => (
-            <NameButton name={n} />
+        nameList.map((n,idx) => (
+            <NameButton
+                id={idx}
+                name={n}
+            />
         ))
     )
 
@@ -43,6 +45,20 @@ function App() {
     }
         , [groupsOf])
 
+
+    const dropHome = (e) => {
+        e.preventDefault();
+        const card_id = e.dataTransfer.getData('card_id');
+        const card = document.getElementById(card_id);
+        // card.style.display = 'block';
+        e.target.appendChild(card)
+    }
+
+    const dragOver = e => {
+        e.preventDefault();
+    }
+
+
     return (
         <Container>
             <Row className="mt-4">
@@ -53,7 +69,11 @@ function App() {
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col
+                            className="border border-danger p-3"
+                            onDrop={dropHome}
+                            onDragOver={dragOver}
+                        >
                             {nameDisplay}
                         </Col>
                     </Row>
