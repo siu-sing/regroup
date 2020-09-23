@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col } from 'react-bootstrap'
+import NameButton from './NameButton';
 
 export default function GroupArea(props) {
 
@@ -15,14 +16,25 @@ export default function GroupArea(props) {
         e.preventDefault();
     }
 
+    let nameDisplay = (
+        props.groupConfig.map(i => (
+            <NameButton
+                key={i}
+                id={i}
+                name={props.students[i]}
+            />
+        ))
+    )
+
     return (
         <Col
             onDrop={drop}
             onDragOver={dragOver}
             sm={4}
             className="border border-primary p-3">
-                {props.groupNo}
-                {props.children}
+            {props.groupNo}
+            {props.children}
+            {nameDisplay}
         </Col>
     )
 }
