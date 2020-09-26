@@ -3,6 +3,8 @@ import { Badge, Button, Card, Col, Row } from 'react-bootstrap'
 
 export default function NameButton(props) {
 
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
     const dragStart = (e) => {
         const target = e.target;
         e.dataTransfer.setData('card_id', target.id)

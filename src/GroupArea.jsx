@@ -58,8 +58,8 @@ export default function GroupArea(props) {
         <Col
             onDrop={drop}
             onDragOver={dragOver}
-            sm={4}
-            className="border border-primary p-3">
+            sm={3}
+            className="group__area p-3 m-1">
             {props.groupNo}
             {props.children}
             {nameDisplay}

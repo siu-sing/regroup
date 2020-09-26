@@ -2,33 +2,28 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Col, Container, Row, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import nameList from './sei25'
+import nameList from './nameList'
 import NameButton from './NameButton';
 import GroupArea from './GroupArea';
 
 function App() {
 
-    document.addEventListener('contextmenu', event => event.preventDefault());
-
-
-
-
     const studentColors = ["success", "warning", "danger"]
 
-    
+
     //Generate students object from students names
     let students = {};
     let colorConfigInit = {}
-    nameList.forEach((n,i)=> {
-        students[i+999]=n;
-        colorConfigInit[i+999]=studentColors[0];
+    nameList.forEach((n, i) => {
+        students[i + 999] = n;
+        colorConfigInit[i + 999] = studentColors[0];
     });
 
     const [colorConfig, setColorConfig] = useState(colorConfigInit);
 
 
     let toggleColor = (student_id) => {
-        let colorConfigTemp = {...colorConfig}
+        let colorConfigTemp = { ...colorConfig }
         colorConfigTemp[student_id] = studentColors[(studentColors.indexOf(colorConfigTemp[student_id]) + 1) % studentColors.length]
         setColorConfig(colorConfigTemp)
     }
@@ -73,7 +68,7 @@ function App() {
         return numGroups
     }
 
-    
+
     //Array of student indexes included
     const [incList, setIncList] = useState(Object.keys(students));
     //Array of student indexes excluded
@@ -82,16 +77,16 @@ function App() {
     //Initialize group config - the list of indexes in each group
     let getInitGroupConfig = (numGroups) => {
         let initGroupConfig = {};
-    
+
         [...Array(numGroups).keys()].forEach(g => {
             initGroupConfig[g] = []
         })
-        
+
         // console.log(initGroupConfig);
-        return  initGroupConfig;
+        return initGroupConfig;
     }
     let initGroupConfig = getInitGroupConfig(getNumGroups(groupsOf));
-    
+
     const [groupConfig, setGroupConfig] = useState(initGroupConfig)
     const [distributeClicked, setDistributeClicked] = useState(false);
     const [seeded, setSeeded] = useState(false);
@@ -131,8 +126,8 @@ function App() {
             setIncList(incList.concat([card_id]))
         }
 
-         //Reset number of groups
-         setNumGroups(getNumGroups(groupsOf));
+        //Reset number of groups
+        setNumGroups(getNumGroups(groupsOf));
     }
 
     //Helper Function - Remove from Inclist
@@ -177,40 +172,40 @@ function App() {
     const refreshPage = () => {
         window.location.reload();
     }
-    
+
 
     //Assign students
     const assignStudents = () => {
-        
+
         //Copy current groupConfig
         let groupConfigTemp = {};
         //if distribute clicked, reset groupConfig first before redistributing, else just copy existing config
-        groupConfigTemp = distributeClicked ? getInitGroupConfig(getNumGroups(groupsOf)) : {...groupConfig}
+        groupConfigTemp = distributeClicked ? getInitGroupConfig(getNumGroups(groupsOf)) : { ...groupConfig }
         // groupConfigTemp = seeded ? {...groupConfig} : getInitGroupConfig(getNumGroups(groupsOf))
         //Random sort incList
         let studentArrIdx = [...incList];
         console.log("student array index")
         console.log(studentArrIdx)
         //Fisher-Yates Algo
-        for(let i = studentArrIdx.length - 1; i > 0; i--){
+        for (let i = studentArrIdx.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * i)
             const temp = studentArrIdx[i]
             studentArrIdx[i] = studentArrIdx[j]
             studentArrIdx[j] = temp
-          }
+        }
 
         //Insert min number of students into each group
         Object.keys(groupConfigTemp).forEach(k => {
-            while(groupConfigTemp[k].length<groupsOf){
+            while (groupConfigTemp[k].length < groupsOf) {
                 groupConfigTemp[k].push(studentArrIdx.pop())
             }
         })
         console.log(groupConfigTemp);
         //If there are leftovers, insert them round robin style
         let key = 0;
-        while (studentArrIdx.length>0) {
+        while (studentArrIdx.length > 0) {
             groupConfigTemp[key].push(studentArrIdx.pop())
-            key= (key+1)%numGroups;
+            key = (key + 1) % numGroups;
         }
 
         console.log(groupConfigTemp);
@@ -218,43 +213,47 @@ function App() {
         setGroupConfig(groupConfigTemp);
 
         document.querySelector(".include__list").querySelectorAll(".name__tag").forEach(e => e.remove());
-        
+
         //Set seeded to false
         setSeeded(false);
-        
+
         //Set Distributed clicked to true
         setDistributeClicked(true);
     }
 
-        //Display Group Area
-        let groupDisplay = (
-            [...Array(numGroups).keys()].map(g => (
-                <GroupArea
-                    key={g}
-                    groupNo={g + 1}
-                    groupConfig={groupConfig[g]}
-                    incList={incList}
-                    students={students}
-                    globalGroupConfig={groupConfig}
-                    setGlobalGroupConfig={setGroupConfig}
-                    distributeClicked={distributeClicked}
-                    removeFromIncList={removeFromIncList}
-                    setSeeded={setSeeded}
-                    colorConfig={colorConfig}
-                    toggleColor={toggleColor}
-                />
-            ))
-        )
+    //Display Group Area
+    let groupDisplay = (
+        [...Array(numGroups).keys()].map(g => (
+            <GroupArea
+                key={g}
+                groupNo={g + 1}
+                groupConfig={groupConfig[g]}
+                incList={incList}
+                students={students}
+                globalGroupConfig={groupConfig}
+                setGlobalGroupConfig={setGroupConfig}
+                distributeClicked={distributeClicked}
+                removeFromIncList={removeFromIncList}
+                setSeeded={setSeeded}
+                colorConfig={colorConfig}
+                toggleColor={toggleColor}
+            />
+        ))
+    )
 
 
     return (
         <Container>
-            <Row className="mt-4">
-                <Col md={4} className="border border-success">
-                    <Row>
-                        <Col>
-                            <h4>Students ({numStudents})</h4>
-                        </Col>
+            <Row>
+                <Col className="text-center my-2">
+                    <h1>REGROUP</h1>
+                    <small><i>Right click on names to toggle colors.</i></small>
+                    <hr/>
+                </Col>
+            </Row>
+            <Row className="">
+                <Col md={4} className="text-center">
+                    <Row className="my-2">
                         <Col>
                             <Button variant="danger" onClick={refreshPage}>Reset All</Button>
                         </Col>
@@ -262,7 +261,7 @@ function App() {
                     <Row>
 
                         <Col
-                            className="border border-danger p-3 include__list"
+                            className="p-3 include__list mx-1 text-center"
                             onDrop={dropInclude}
                             onDragOver={dragOver}
                         >
@@ -271,7 +270,7 @@ function App() {
                             {nameDisplay}
                         </Col>
                         <Col
-                            className="border border-danger p-3"
+                            className="p-3 exclude__area mx-1 text-center"
                             onDrop={dropExclude}
                             onDragOver={dragOver}
                         >
@@ -281,23 +280,23 @@ function App() {
 
                     </Row>
                 </Col>
-                <Col md={8} className="border border-warning">
-                    <Row>
+                <Col md={8} className="">
+                    <Row className="text-center">
                         <Col>
                             <Row>
                                 <Col>
-                                    Students per group: {groupsOf} <br />
+                                    Students per Group: {groupsOf} <br />
 
                                     {groupsOfButtonDisplay}
 
                                 </Col>
-                                
+
                             </Row>
                             <Row className="mt-3">
                                 <Col>
-                                    <Button 
-                                    variant="primary"
-                                    onClick={assignStudents}
+                                    <Button
+                                        variant="primary"
+                                        onClick={assignStudents}
                                     >Distribute</Button>
                                 </Col>
                             </Row>
@@ -310,7 +309,7 @@ function App() {
                             </Row>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row className="justify-content-center">
                         {/* <Col> */}
                         {groupDisplay}
                         {/* </Col> */}
