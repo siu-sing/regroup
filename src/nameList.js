@@ -1,13 +1,7 @@
-
 // import faker from 'faker';
-var faker = require('faker');
-faker.seed(123);
-let nameListTemp = [];
-
-[...Array(16).keys()].forEach(i => {
-    nameListTemp.push(faker.name.findName())
-})
-
-const nameList = nameListTemp;
+const nameList = ["Clara Keebler",
+    "Brandy Reichel",
+    "Ben Satterfield", "Grant McClure", "Charlie Jacobs", "Pam Hane", "Jeffrey Powlowski", "Bridget Murray", "Todd Boehm IV", "Kristin Nicolas", "Stella Reilly", "Dana Reichert", "Lyle Hettinger", "Jeffery Greenholt", "Erma Bosco", "Mark Keeling"
+];
 
 module.exports = nameList;
