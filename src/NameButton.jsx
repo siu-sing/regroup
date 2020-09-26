@@ -16,10 +16,10 @@ export default function NameButton(props) {
 
     }
     return (
-        <Row>
+        <Row className="">
             <Col className="">
                 <Card
-                    className="p-1 mt-1 text-center"
+                    className="p-1 mt-1 text-center name__tag"
                     // variant="success"
                     draggable="true"
                     onDragStart={dragStart}

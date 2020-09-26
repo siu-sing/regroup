@@ -8,11 +8,10 @@ import GroupArea from './GroupArea';
 
 function App() {
 
-
     //Generate students object from students names
     let students = {};
     nameList.forEach((n,i)=> {
-        students[i]=n;
+        students[i+999]=n;
     });
     const [numStudents, setNumStudents] = useState(nameList.length)
 
@@ -64,27 +63,15 @@ function App() {
         [...Array(numGroups).keys()].forEach(g => {
             initGroupConfig[g] = []
         })
-
+        
         // console.log(initGroupConfig);
         return  initGroupConfig;
     }
     let initGroupConfig = getInitGroupConfig(getNumGroups(groupsOf));
     
     const [groupConfig, setGroupConfig] = useState(initGroupConfig)
-
-    //Display Group Area
-    let groupDisplay = (
-        [...Array(numGroups).keys()].map(g => (
-            <GroupArea
-                key={g+numGroups}
-                groupNo={g + 1}
-                groupConfig={groupConfig[g]}
-                incList={incList}
-                students={students}
-            />
-        ))
-    )
-
+    const [distributeClicked, setDistributeClicked] = useState(false);
+    const [seeded, setSeeded] = useState(false);
 
     //Update number of groups given change in set groupsof 
     useEffect(() => {
@@ -92,8 +79,10 @@ function App() {
         setGroupConfig(getInitGroupConfig(getNumGroups(groupsOf)));
         console.log("INCLIST")
         console.log(incList)
+        console.log("NUMGROUPS")
+        console.log(numGroups)
     }
-        , [groupsOf,incList])
+        , [groupsOf, incList, numGroups])
 
 
     //Dropping into the Include Area
@@ -118,6 +107,20 @@ function App() {
         if (!incList.includes(card_id)) {
             setIncList(incList.concat([card_id]))
         }
+
+         //Reset number of groups
+         setNumGroups(getNumGroups(groupsOf));
+    }
+
+    //Helper Function - Remove from Inclist
+    let removeFromIncList = (studentId) => {
+        if (incList.includes(studentId)) {
+            let tmpList = incList;
+            tmpList.splice(tmpList.indexOf(studentId), 1);
+            setIncList(tmpList);
+        }
+        console.log("removing from inclist")
+        console.log(incList)
     }
 
     //Dropping into the Exclude Area
@@ -130,16 +133,15 @@ function App() {
         e.target.appendChild(card)
 
         //Remove From Include List if found Insert to Exclude List
-        if (incList.includes(card_id)) {
-            let tmpList = incList;
-            tmpList.splice(tmpList.indexOf(card_id), 1);
-            setIncList(tmpList);
-        }
+        removeFromIncList(card_id);
 
         //Add name to exclude list if not already there
         if (!exList.includes(card_id)) {
             setExList(exList.concat([card_id]))
         }
+
+        //Reset number of groups
+        setNumGroups(getNumGroups(groupsOf));
 
     }
 
@@ -152,17 +154,16 @@ function App() {
     const refreshPage = () => {
         window.location.reload();
     }
-
-    const [distributeClicked, setDistributeClicked] = useState(false);
+    
 
     //Assign students
     const assignStudents = () => {
-
+        
         //Copy current groupConfig
         let groupConfigTemp = {};
         //if distribute clicked, reset groupConfig first before redistributing, else just copy existing config
         groupConfigTemp = distributeClicked ? getInitGroupConfig(getNumGroups(groupsOf)) : {...groupConfig}
-
+        // groupConfigTemp = seeded ? {...groupConfig} : getInitGroupConfig(getNumGroups(groupsOf))
         //Random sort incList
         let studentArrIdx = [...incList];
         console.log("student array index")
@@ -192,10 +193,33 @@ function App() {
         console.log(groupConfigTemp);
         //Update groupConfig with new groupings
         setGroupConfig(groupConfigTemp);
+
+        document.querySelector(".include__list").querySelectorAll(".name__tag").forEach(e => e.remove());
+        
+        //Set seeded to false
+        setSeeded(false);
         
         //Set Distributed clicked to true
         setDistributeClicked(true);
     }
+
+        //Display Group Area
+        let groupDisplay = (
+            [...Array(numGroups).keys()].map(g => (
+                <GroupArea
+                    key={g}
+                    groupNo={g + 1}
+                    groupConfig={groupConfig[g]}
+                    incList={incList}
+                    students={students}
+                    globalGroupConfig={groupConfig}
+                    setGlobalGroupConfig={setGroupConfig}
+                    distributeClicked={distributeClicked}
+                    removeFromIncList={removeFromIncList}
+                    setSeeded={setSeeded}
+                />
+            ))
+        )
 
 
     return (
@@ -213,7 +237,7 @@ function App() {
                     <Row>
 
                         <Col
-                            className="border border-danger p-3"
+                            className="border border-danger p-3 include__list"
                             onDrop={dropInclude}
                             onDragOver={dragOver}
                         >
@@ -242,6 +266,7 @@ function App() {
                                     {groupsOfButtonDisplay}
 
                                 </Col>
+                                
                             </Row>
                             <Row className="mt-3">
                                 <Col>
