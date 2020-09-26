@@ -8,11 +8,32 @@ import GroupArea from './GroupArea';
 
 function App() {
 
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+
+
+
+    const studentColors = ["success", "warning", "danger"]
+
+    
     //Generate students object from students names
     let students = {};
+    let colorConfigInit = {}
     nameList.forEach((n,i)=> {
         students[i+999]=n;
+        colorConfigInit[i+999]=studentColors[0];
     });
+
+    const [colorConfig, setColorConfig] = useState(colorConfigInit);
+
+
+    let toggleColor = (student_id) => {
+        let colorConfigTemp = {...colorConfig}
+        colorConfigTemp[student_id] = studentColors[(studentColors.indexOf(colorConfigTemp[student_id]) + 1) % studentColors.length]
+        setColorConfig(colorConfigTemp)
+    }
+
+
     const [numStudents, setNumStudents] = useState(nameList.length)
 
     //Display Names
@@ -22,6 +43,8 @@ function App() {
                 key={k}
                 id={k}
                 name={students[k]}
+                color={colorConfig[k]}
+                toggleColor={toggleColor}
             />
         ))
     )
@@ -217,6 +240,8 @@ function App() {
                     distributeClicked={distributeClicked}
                     removeFromIncList={removeFromIncList}
                     setSeeded={setSeeded}
+                    colorConfig={colorConfig}
+                    toggleColor={toggleColor}
                 />
             ))
         )

@@ -46,6 +46,8 @@ export default function GroupArea(props) {
                 key={i}
                 id={i}
                 name={props.students[i]}
+                color={props.colorConfig[i]}
+                toggleColor={props.toggleColor}
             />
         ))
     )

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap'
 
 export default function NameButton(props) {
@@ -15,6 +15,8 @@ export default function NameButton(props) {
         e.stopPropagation();
 
     }
+
+
     return (
         <Row className="">
             <Col className="">
@@ -25,8 +27,9 @@ export default function NameButton(props) {
                     onDragStart={dragStart}
                     onDragOver={dragOver}
                     id={props.id}
-                    bg="success"
+                    bg={props.color}
                     text="white"
+                    onContextMenu={()=>(props.toggleColor(props.id))}
                 >
                     {props.name}
                 </Card>
