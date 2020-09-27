@@ -46,18 +46,18 @@ function App() {
 
     // Group settings
     const [numGroups, setNumGroups] = useState(0);
-    const [groupsOf, setGroupsOf] = useState(2);
+    const [groupsOf, setGroupsOf] = useState(1);
 
     //Display GroupsOf Button
     const groupsOfButtonDisplay = (
-        [...Array(Math.floor(numStudents / 2) - 1).keys()].map(i => (
+        [...Array(Math.ceil(numStudents / 2)).keys()].map(i => (
             <Button
                 key={i}
                 variant="dark"
-                onClick={() => setGroupsOf(i + 2)}
+                onClick={() => setGroupsOf(i + 1)}
                 className="mr-1"
             >
-                {i + 2}
+                {i + 1}
             </Button>
         ))
     )
